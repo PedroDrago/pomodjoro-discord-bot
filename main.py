@@ -5,7 +5,7 @@ import os
 from dotenv import load_dotenv
 from discord import FFmpegPCMAudio
 
-client = commands.Bot(intents=discord.Intents.all() ,command_prefix = '!')
+client = commands.Bot(intents=discord.Intents.all() ,command_prefix = '-')
 load_dotenv()
 TOKEN = os.getenv('BOT_TOKEN')
 
@@ -35,6 +35,8 @@ async def alarm(ctx):
     voice = await channel.connect()
     source = FFmpegPCMAudio('alarm.mp3')
     voice.play(source)
+    sleep(7)
+    await leave(ctx)
     
 
 
@@ -44,12 +46,15 @@ async def djstart(ctx, pomodoro=25, short_break=5, long_break=10, cycles=4):
     await channel.send(f'Pomodoro initialized with times')
     for c in range(cycles):
         await channel.send(f'Starting cycle {c+1}')
-        sleep(pomodoro * 60) # *60 after testing
+        sleep(pomodoro) # *60 after testing
+        await alarm(ctx)
         await channel.send(f'End of study time')
-        sleep(short_break * 60)
+        sleep(short_break)
+        await alarm(ctx)
         await channel.send(f'End of short break.')
     await channel.send(f'Cycles have endend.')
-    sleep(long_break * 60)
+    sleep(long_break)
+    await alarm(ctx)
     await channel.send('End of long break.')
             
 
