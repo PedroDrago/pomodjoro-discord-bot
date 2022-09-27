@@ -3,6 +3,7 @@ import discord
 from discord.ext import commands
 import os
 from dotenv import load_dotenv
+from discord import FFmpegPCMAudio
 
 client = commands.Bot(intents=discord.Intents.all() ,command_prefix = '!')
 load_dotenv()
@@ -13,10 +14,34 @@ async def on_ready():
     print('Bot have been successfully initialized.')
     print('_______________________________________')
 
+@client.command(pass_context = True)
+async def join(ctx):
+    if (ctx.author.voice):
+        channel = ctx.message.author.voice.channel
+        await channel.connect()
+    else:
+        await ctx.send('not in voice channel')
+
+@client.command(pass_context = True)
+async def leave(ctx):
+    if (ctx.voice_client):
+        await ctx.guild.voice_client.disconnect()
+    else:
+        await ctx.send('not in voice channel')
+
+@client.command(pass_context = True)
+async def alarm(ctx):
+    channel = ctx.message.author.voice.channel
+    voice = await channel.connect()
+    source = FFmpegPCMAudio('alarm.mp3')
+    voice.play(source)
+    
+
+
 @client.command()
 async def djstart(ctx, pomodoro=25, short_break=5, long_break=10, cycles=4):
     channel = client.get_channel(1024003232227393576)
-    await channel.send('Pomodoro initialized with times bla bla bla')
+    await channel.send(f'Pomodoro initialized with times')
     for c in range(cycles):
         await channel.send(f'Starting cycle {c+1}')
         sleep(pomodoro * 60) # *60 after testing
@@ -27,6 +52,9 @@ async def djstart(ctx, pomodoro=25, short_break=5, long_break=10, cycles=4):
     sleep(long_break * 60)
     await channel.send('End of long break.')
             
+
+
+
 
 
 client.run(TOKEN)
