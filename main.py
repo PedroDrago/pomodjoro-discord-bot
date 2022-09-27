@@ -4,6 +4,7 @@ from discord.ext import commands
 import os
 from dotenv import load_dotenv
 from discord import FFmpegPCMAudio
+from PyQt5.QtCore import QTimer
 
 client = commands.Bot(intents=discord.Intents.all() ,command_prefix = '-')
 load_dotenv()
@@ -16,6 +17,7 @@ async def on_ready():
 
 @client.command(pass_context = True)
 async def join(ctx):
+    print('join function initialized')
     if (ctx.author.voice):
         channel = ctx.message.author.voice.channel
         await channel.connect()
@@ -24,6 +26,7 @@ async def join(ctx):
 
 @client.command(pass_context = True)
 async def leave(ctx):
+    print('leave function initialized')
     if (ctx.voice_client):
         await ctx.guild.voice_client.disconnect()
     else:
@@ -31,17 +34,20 @@ async def leave(ctx):
 
 @client.command(pass_context = True)
 async def alarm(ctx):
+    print('alarm() function initialized')
     channel = ctx.message.author.voice.channel
     voice = await channel.connect()
     source = FFmpegPCMAudio('alarm.mp3')
     voice.play(source)
     sleep(7)
     await leave(ctx)
+
+# @client.command
+# async def elapse_time():
     
-
-
 @client.command()
-async def djstart(ctx, pomodoro=25, short_break=5, long_break=10, cycles=4):
+async def pomstart(ctx, pomodoro=25, short_break=5, long_break=10, cycles=4):
+    print('pomstart() function initialized')
     channel = client.get_channel(1024003232227393576)
     await channel.send(f'Pomodoro initialized with times')
     for c in range(cycles):
@@ -57,9 +63,4 @@ async def djstart(ctx, pomodoro=25, short_break=5, long_break=10, cycles=4):
     await alarm(ctx)
     await channel.send('End of long break.')
             
-
-
-
-
-
 client.run(TOKEN)
