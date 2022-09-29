@@ -6,15 +6,18 @@ from dotenv import load_dotenv
 from discord import FFmpegPCMAudio
 from PyQt5.QtCore import QTimer
 
+#criacao da instancia do bot
 client = commands.Bot(intents=discord.Intents.all() ,command_prefix = '-')
 load_dotenv()
 TOKEN = os.getenv('BOT_TOKEN')
 
+#evento que printa mensagem informando que o bot foi inicializado
 @client.event
 async def on_ready():
     print('Bot have been successfully initialized.')
     print('_______________________________________')
 
+#funcao que faz o bot entrar no canal de audio
 @client.command(pass_context = True)
 async def join(ctx):
     print('join function initialized')
@@ -24,6 +27,7 @@ async def join(ctx):
     else:
         await ctx.send('not in voice channel')
 
+#Funcao que faz o bot sair do canal de audio
 @client.command(pass_context = True)
 async def leave(ctx):
     print('leave function initialized')
@@ -32,6 +36,7 @@ async def leave(ctx):
     else:
         await ctx.send('not in voice channel')
 
+#funcao que faz o bot entrar no canal de audio, tocar alarm.mp3 e apos isso sair do canal
 @client.command(pass_context = True)
 async def alarm(ctx):
     print('alarm() function initialized')
@@ -42,9 +47,7 @@ async def alarm(ctx):
     sleep(7)
     await leave(ctx)
 
-# @client.command
-# async def elapse_time():
-    
+#funcao que comeca o timer pomodoro.    
 @client.command()
 async def pomstart(ctx, pomodoro=25, short_break=5, long_break=10, cycles=4):
     print('pomstart() function initialized')
@@ -62,5 +65,6 @@ async def pomstart(ctx, pomodoro=25, short_break=5, long_break=10, cycles=4):
     sleep(long_break)
     await alarm(ctx)
     await channel.send('End of long break.')
-            
+
+#roda o bot            
 client.run(TOKEN)
