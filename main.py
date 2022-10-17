@@ -4,7 +4,7 @@ from discord.ext import commands
 import os
 from dotenv import load_dotenv
 from discord import FFmpegPCMAudio
-from PyQt5.QtCore import QTimer
+#from PyQt5.QtCore import QTimer
 
 #criacao da instancia do bot
 client = commands.Bot(intents=discord.Intents.all() ,command_prefix = '-')
